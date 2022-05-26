@@ -6,7 +6,7 @@ require('dotenv').config()
 const port = process.env.PORT || 5000
 
 const server = http.createServer(app)
-const dbUri = `mongodb+srv://Kirubel:${process.env.DB_PASSWORD}@cluster0.5kpjp.mongodb.net/?retryWrites=true&w=majority`
+const dbUri = process.env.DB_URI
 
 const connection = () => {
     mongoose.connect(dbUri, { useNewUrlParser: true, useUnifiedTopology: true })
