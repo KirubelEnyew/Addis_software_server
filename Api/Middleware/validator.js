@@ -1,0 +1,12 @@
+const { validation } = require('../Validation/validation')
+
+const employeeValidator = (req, res, next) => {
+    const { name, dateOfBirth, gender, salary } = req.body
+    const valid = validation({ name, dateOfBirth, gender, salary })
+    if (valid.error) {
+        return res.status(400).json({ error: true, message: 'Error, invalid data sent' })
+    }
+    return next()
+}
+
+exports.employeeValidator = employeeValidator

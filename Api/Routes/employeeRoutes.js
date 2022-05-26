@@ -1,6 +1,6 @@
 const { EmployeeModel, addEmployee, deleteEmployee, updateEmployee } = require('../Model/employee')
-const { validation } = require('../Validation/validation')
 const route = require('express').Router()
+const { employeeValidator } = require('../Middleware/validator')
 
 //route to get a list of all employees
 route.get('/getEmployees', async (req, res) => {
@@ -12,11 +12,7 @@ route.get('/getEmployees', async (req, res) => {
 });
 
 // route to register a new employee
-route.post('/registerEmployee', async (req, res) => {
-    const valid = validation(req.body)
-    if (valid.error) {
-        return res.status(400).json({ error: true, message: 'Error, invalid data sent' })
-    }
+route.post('/registerEmployee', employeeValidator, async (req, res) => {
     const { error, message } = await addEmployee(req.body)
     if (error) {
         return res.status(500).json({ message: 'Failed to add employee', error })
@@ -34,12 +30,7 @@ route.delete('/removeEmployee', async (req, res) => {
 })
 
 // route to update existing employee data
-route.patch('/updateEmployee', async (req, res) => {
-    const { name, dateOfBirth, gender, salary } = req.body
-    const valid = validation({ name, dateOfBirth, gender, salary })
-    if (valid.error) {
-        return res.status(400).json({ message: 'Error, invalid data sent', error: true })
-    }
+route.patch('/updateEmployee', employeeValidator, async (req, res) => {
     const { error, message } = await updateEmployee(req.body)
     if (error) {
         return res.status(500).json({ message: "Failed to remove employee", error })
