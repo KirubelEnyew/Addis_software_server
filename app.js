@@ -1,6 +1,7 @@
 const express = require('express');
 const cors = require('cors')
 const employee = require('./Api/Routes/employeeRoutes')
+const user = require('./Api/Routes/user')
 const app = express();
 
 app.use(express.json());
@@ -9,6 +10,7 @@ app.use(cors())
 
 // routes here
 app.use('/api/employee', employee);
+app.use('/api/user', user);
 
 // to handle unkown route requests
 app.use('*', (req, res) => {
