@@ -9,4 +9,17 @@ const validator = (employee) => {
     })
     return validationSchema.validate(employee)
 }
+
+
+const validateUser = (newUser) => {
+    const validationSchema = joi.object({
+        fullName: joi.string().required().min(2),
+        email: joi.string().email().required(),
+        password: joi.string().required()
+    })
+    return validationSchema.validate(newUser)
+}
+
+
 exports.validation = validator
+exports.validateUser = validateUser
