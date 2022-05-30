@@ -1,9 +1,10 @@
 const { EmployeeModel, addEmployee, deleteEmployee, updateEmployee } = require('../Model/employee')
 const route = require('express').Router()
-const { employeeValidator } = require('../Middleware/validator')
+const { employeeValidator } = require('../Middleware/validator');
+const authenticateUser = require('../Middleware/auth');
 
 //route to get a list of all employees
-route.get('/getEmployees', async (req, res) => {
+route.get('/getEmployees',authenticateUser ,async (req, res) => {
     const employee = await EmployeeModel.find()
     if (employee) {
         return res.status(200).json({ error: false, message: 'Employees fetched successfully', data: employee })
@@ -12,7 +13,7 @@ route.get('/getEmployees', async (req, res) => {
 });
 
 // route to register a new employee
-route.post('/registerEmployee', employeeValidator, async (req, res) => {
+route.post('/registerEmployee',[authenticateUser, employeeValidator], async (req, res) => {
     const { error, message } = await addEmployee(req.body)
     if (error) {
         return res.status(500).json({ message: 'Failed to add employee', error })
@@ -21,7 +22,7 @@ route.post('/registerEmployee', employeeValidator, async (req, res) => {
 })
 
 // route to delete existing employee
-route.delete('/removeEmployee', async (req, res) => {
+route.delete('/removeEmployee',authenticateUser , async (req, res) => {
     const { error, message } = await deleteEmployee(req.query.id)
     if (error) {
         return res.status(500).json({ message: "Failed to remove employee", error })
@@ -30,7 +31,7 @@ route.delete('/removeEmployee', async (req, res) => {
 })
 
 // route to update existing employee data
-route.patch('/updateEmployee', employeeValidator, async (req, res) => {
+route.patch('/updateEmployee', [authenticateUser, employeeValidator], async (req, res) => {
     const { error, message } = await updateEmployee(req.body)
     if (error) {
         return res.status(500).json({ message: "Failed to remove employee", error })
